@@ -8,6 +8,7 @@ const app = require('commander')
 const mongodb = require('mongodb')
 const mime = require('mime')
 const async = require('async')
+const hooks = require('./hooks')
 
 app.version('0.0.1')
   .usage('[options] [files...]')
@@ -42,23 +43,41 @@ mongodb.MongoClient.connect(app.host, (error, db) => {
         // `files` is just an array of file names, not full path.
         // Consume 10 files in parallel.
         async.eachLimit(files, 10, function (filename, done) {
-          filename = path.join(parentDir, filename)
+          let filepath = path.join(parentDir, filename)
           // Do with this files whatever you want.
           // Then don't forget to call `done()`.
-          console.log(' filename >>> ', filename)
-          if (!fs.lstatSync(filename).isDirectory()) {
-            let uploadStream = bucket.openUploadStream(filename, {contentType: mime.lookup(filename)})
+          console.log(' filepath >>> ', filepath)
+          if (!fs.lstatSync(filepath).isDirectory()) {
+            let uploadStream = bucket.openUploadStream(filepath, {contentType: mime.lookup(filename)})
             uploadStream.on('error', (error) => {
-              if (app.verbose) console.log('Error for', filename)
+              if (app.verbose) console.log('Error for', filepath)
             })
 
             uploadStream.on('finish', fileInfo => {
               successCount++
-              if (app.verbose) console.log('Success for', filename, '->', fileInfo._id)
-              if (successCount === files.length) db.close()
+              if (app.verbose) console.log('Success for', filepath, '->', fileInfo._id)
+
+              let config = {}
+              config.db = db
+              config.filename = filename
+              config.filepath = filepath
+              config._id = fileInfo._id
+
+              hooks.postAddFileToDatabase(config, (err, res) => {
+                if (err) {
+                  console.log('err in >> post hook >> ', err)
+                } else {
+                  console.log('result in >> post hook >> ', res.result)
+                }
+              })
+              if (successCount === files.length) {
+                console.log('end of files push. can terminate the process')
+              // db.close()
+              }
             })
 
-            fs.createReadStream(filename).pipe(uploadStream)
+            // if (successCount === files.length) db.close()
+            fs.createReadStream(filepath).pipe(uploadStream)
           } else {
             successCount++
             if (successCount === files.length) db.close()

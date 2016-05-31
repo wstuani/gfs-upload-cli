@@ -8,7 +8,6 @@ const app = require('commander')
 const mongodb = require('mongodb')
 const mime = require('mime')
 const async = require('async')
-const hooks = require('./hooks')
 
 app.version('0.0.1')
   .usage('[options] [files...]')
@@ -63,16 +62,30 @@ mongodb.MongoClient.connect(app.host, (error, db) => {
               config.filepath = filepath
               config._id = fileInfo._id
 
-              hooks.postAddFileToDatabase(config, (err, res) => {
-                if (err) {
-                  console.log('err in >> post hook >> ', err)
-                } else {
-                  console.log('result in >> post hook >> ', res.result)
+              let hooks
+              try {
+                hooks = require(parentDir + '/hooks.js')
+              } catch (e) {
+                console.log('error in getting hook >>> ', e)
+              }
+
+              if (hooks) {
+                hooks.postAddFileToDatabase(config, (err, res) => {
+                  if (err) {
+                    console.log('err in >> post hook >> ', err)
+                  } else {
+                    console.log('result in >> post hook >> ', res.result)
+                    if (successCount === files.length) {
+                      console.log('end of files push. can terminate the process')
+                    // db.close()
+                    }
+                  }
+                })
+              } else {
+                if (successCount === files.length) {
+                  console.log('end of files push. can terminate the process')
+                // db.close()
                 }
-              })
-              if (successCount === files.length) {
-                console.log('end of files push. can terminate the process')
-              // db.close()
               }
             })
 
@@ -86,6 +99,7 @@ mongodb.MongoClient.connect(app.host, (error, db) => {
         }, cb)
       }
     ], function (err) {
+      // db.close()
       err && console.trace(err)
       console.log('Done upload to gridfs')
     // process.exit(1)

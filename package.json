@@ -1,15 +1,15 @@
 {
-  "name": "gfs-upload-cli",
+  "name": "gfs-up",
   "version": "0.0.2",
-  "description": "Upload files to MongoDB GridFS using cli",
+  "description": "Upload files & folders to MongoDB GridFS using cli",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/sohje/gfs-upload-cli.git",
+    "url": "https://github.com/saurshaz/gfs-upload-cli.git",
     "type": "git"
   },
   "author": {
-    "name": "Nikolay Spiridonov",
-    "email": "nikolay.spiridonov@gmail.com"
+    "name": "Saurabh SHarma",
+    "email": "saurshaz@gmail.com"
   },
   "bin": {
     "gfs-upload": "cli.js"

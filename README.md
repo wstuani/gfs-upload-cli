@@ -1,5 +1,5 @@
 # gfs-upload-cli
-[![Build Status](https://travis-ci.org/sohje/gfs-upload-cli.svg?branch=master)](https://travis-ci.org/sohje/gfs-upload-cli)  
+[![Build Status](https://travis-ci.org/saurshaz/gfs-upload-cli.svg?branch=master)](https://travis-ci.org/saurshaz/gfs-upload-cli)  
 Upload files to MongoDB GridFS using cli
 
 ## Install
@@ -13,8 +13,8 @@ $ npm install --global gfs-upload-cli
 ```
 $ gfs-upload --help
 
-  Usage: gfs-upload [options] [files...]
-
+  Usage: gfs-upload -v -D <relaive_directory_path>  -H <db_uri>
+  
   Upload files to MongoDB GridFS using cli.
 
   Options:
@@ -22,13 +22,14 @@ $ gfs-upload --help
     -h, --help           output usage information
     -V, --version        output the version number
     -H, --host <string>  MongoDB URI
+    -D, --dir <string>   Relative directory path(to be uploaded)
     -v, --verbose        Verbose output
 
-  Examples:
-    $ gfs-upload -v -H mongodb://localhost:27107/testDB /tmp/test.jpg
-    $ gfs-upload -H mongodb://localhost/testDB ../images/* ../js/*.js ../css/*
+  Example Usage: 
+     gfs-upload -v -D ./dashgum  -H mongodb://localhost/clitest  
+
 ```
 
 ## License
 
-MIT © [Nikolay Spiridonov](https://github.com/sohje)
+MIT © [Saurabh Sharma](https://github.com/saurshaz)

@@ -55,13 +55,13 @@ mongodb.MongoClient.connect(app.host, (error, db) => {
             uploadStream.on('finish', fileInfo => {
               successCount++
               if (app.verbose) console.log('Success for', filename, '->', fileInfo._id)
-            // if (successCount === files.length) db.close()
+              if (successCount === files.length) db.close()
             })
 
             fs.createReadStream(filename).pipe(uploadStream)
           } else {
             successCount++
-          // (successCount === files.length) db.close()
+            if (successCount === files.length) db.close()
           }
           done()
         }, cb)

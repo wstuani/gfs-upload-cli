@@ -14,6 +14,7 @@ app.version('0.0.1')
   .description('Upload files to MongoDB GridFS using cli.')
   .option('-H, --host <string>', 'MongoDB URI')
   .option('-D, --dir <string>', 'Directory')
+  .option('-C, --collection <string>', 'Collection')
   .option('-v, --verbose', 'Verbose output')
   .parse(process.argv)
 
@@ -33,7 +34,7 @@ mongodb.MongoClient.connect(app.host, (error, db) => {
     let parentDir = path.join(path.resolve(app.dir))
     console.log(' app.dir >>> ', parentDir)
 
-    let bucket = new mongodb.GridFSBucket(db)
+    let bucket = new mongodb.GridFSBucket(db,{bucketName:app.collection||'fs'})
     async.waterfall([
       function (cb) {
         fs.readdir(parentDir, cb)

@@ -1,11 +1,13 @@
-# gfs-upload-cli
+# gfs-upd-cli
 [![Build Status](https://travis-ci.org/saurshaz/gfs-upload-cli.svg?branch=master)](https://travis-ci.org/saurshaz/gfs-upload-cli)  
-Upload files to MongoDB GridFS using cli
+Upload files to MongoDB GridFS using cli with Collection
+
+FORK OF https://github.com/sohje/gfs-upload-cli
 
 ## Install
 
 ```
-$ npm install --global gfs-upload-cli
+$ npm install --global gfs-upd-cli
 ```
 
 ## Usage
